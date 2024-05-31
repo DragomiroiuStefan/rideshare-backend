@@ -1,0 +1,30 @@
+### Find all
+GET {{host}}/locations
+
+###  Find by City Containing
+GET {{host}}/locations/findByCityContaining?city=Ult
+
+### Find by id
+GET {{host}}/locations/2
+
+### Create
+POST {{host}}/locations
+Content-Type: application/json
+
+{
+  "city": "Ultimu",
+  "county": "VL"
+}
+
+### Update
+PUT {{host}}/locations/529
+Content-Type: application/json
+
+{
+  "locationId": 529,
+  "city": "Ult",
+  "county": "VL"
+}
+
+### Delete
+DELETE {{host}}/locations/1

@@ -1,0 +1,59 @@
+### Find rides
+GET {{host}}/rides/findBy?departure=5&arrival=7&date=2023-06-27&seats=2
+Accept: application/json
+
+### Find by id
+GET {{host}}/rides/3
+Accept: application/json
+
+### Create
+POST {{host}}/rides
+Content-Type: application/json
+
+{
+  "driver": 1,
+  "departureDate": "2023-12-31",
+  "seats": 3,
+  "additionalComment": "",
+  "vehicle": "ABC-130",
+  "connections": [
+    {
+      "departureLocation": 4,
+      "arrivalLocation": 5,
+      "departureTime": "2023-06-27T17:36:43.000000",
+      "arrivalTime": "2023-06-27T19:36:43.000000",
+      "departureAddress": "departure Address ...",
+      "price": 50
+    },
+    {
+      "departureLocation": 5,
+      "arrivalLocation": 6,
+      "departureTime": "2023-06-27T19:36:43.000000",
+      "arrivalTime": "2023-06-27T20:36:43.000000",
+      "price": 30
+    },
+    {
+      "departureLocation": 6,
+      "arrivalLocation": 7,
+      "departureTime": "2023-06-27T20:36:43.000000",
+      "arrivalTime": "2023-06-27T21:36:43.000000",
+      "arrivalAddress": "arrival Address ...",
+      "price": 40
+    }
+  ]
+}
+
+### Update
+PUT {{host}}/rides/2
+Content-Type: application/json
+
+
+### Delete
+DELETE {{host}}/rides/2
+
+### Sandbox
+POST {{host}}/sandbox
+Content-Type: application/json
+
+
+
