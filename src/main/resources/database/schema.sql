@@ -6,9 +6,8 @@ drop table if exists ride;
 drop type if exists ride_status;
 drop table if exists vehicle;
 drop table if exists booking;
-drop table if exists user_role;
+drop table if exists user_token;
 drop table if exists "user";
-drop type if exists role;
 
 create table "user"
 (
@@ -21,18 +20,24 @@ create table "user"
     birth_date      date                not null,
     profile_picture varchar(64),
     created_on      timestamp default now(),
-    last_login      timestamp
+    last_login      timestamp,
+    role            varchar(20)         not null
 );
 
-create type role as enum ('USER', 'ADMIN');
+-- create table user_role
+-- (
+--     user_id    bigint references "user" (user_id) not null,
+--     role       role                               not null,
+--     granted_by bigint references "user" (user_id) not null,
+--     granted_at date default CURRENT_DATE          not null,
+--     unique (user_id, role)
+-- );
 
-create table user_role
+create table user_token
 (
-    user_id    bigint references "user" (user_id) not null,
-    role       role                               not null,
-    granted_by bigint references "user" (user_id) not null,
-    granted_at date default CURRENT_DATE          not null,
-    unique (user_id, role)
+    token_id      bigint generated always as identity primary key,
+    refresh_token varchar(128),
+    user_id       bigint references "user" (user_id) not null
 );
 
 create table vehicle

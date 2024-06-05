@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,6 +49,7 @@ class LocationController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Location create(@Valid @RequestBody Location location) {
         logger.info("Create request for location: {}", location);
         return locationRepository.save(location);
@@ -55,6 +57,7 @@ class LocationController {
 
     @PutMapping("/{locationID}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Location update(@PathVariable Long locationID, @Validated(Update.class) @RequestBody Location location) {
         logger.info("Update request for location: {}", location);
         if (locationRepository.findById(locationID).isEmpty()) {
@@ -65,6 +68,7 @@ class LocationController {
 
     @DeleteMapping("/{locationID}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void delete(@PathVariable Long locationID) {
         logger.info("Delete request location with ID: {}", locationID);
         locationRepository.deleteById(locationID);
