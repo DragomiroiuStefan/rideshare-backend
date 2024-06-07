@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.stefandragomiroiu.rideshare_backend.util.Constants.LOCATION_NOT_FOUND_ERROR_MESSAGE;
+
 @CrossOrigin()
 @RestController
 @RequestMapping("/locations")
 class LocationController {
 
     private static final Logger logger = LoggerFactory.getLogger(LocationController.class);
-
-    public static final String LOCATION_NOT_FOUND_ERROR_MESSAGE = "Location with ID %d not found";
 
     private final LocationRepository locationRepository;
 

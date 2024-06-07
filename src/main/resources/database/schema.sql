@@ -3,7 +3,6 @@ drop table if exists booking_connection;
 drop table if exists ride_connection;
 drop table if exists location;
 drop table if exists ride;
-drop type if exists ride_status;
 drop table if exists vehicle;
 drop table if exists booking;
 drop table if exists user_token;
@@ -23,15 +22,6 @@ create table "user"
     last_login      timestamp,
     role            varchar(20)         not null
 );
-
--- create table user_role
--- (
---     user_id    bigint references "user" (user_id) not null,
---     role       role                               not null,
---     granted_by bigint references "user" (user_id) not null,
---     granted_at date default CURRENT_DATE          not null,
---     unique (user_id, role)
--- );
 
 create table user_token
 (
@@ -59,8 +49,6 @@ create table location
     county      varchar(255) not null
 );
 
-create type ride_status as enum ('ACTIVE', 'FINISHED', 'CANCELED');
-
 create table ride
 (
     ride_id            bigint generated always as identity primary key,
@@ -69,7 +57,7 @@ create table ride
     seats              int                                           not null,
     additional_comment varchar(255),
     vehicle            varchar(20) references vehicle (plate_number) not null,
-    status             ride_status,
+    status             varchar(10)                                   not null,
     posted_at          timestamp default now()
 );
 
@@ -80,8 +68,6 @@ create table ride_connection
     arrival_location   bigint references location (location_id),
     departure_time     timestamp not null,
     arrival_time       timestamp not null,
-    departure_address  varchar(255),
-    arrival_address    varchar(255),
     price              int       not null,
     ride_id            bigint references ride (ride_id)
     -- ride_id , departure UNIQUE
@@ -102,15 +88,15 @@ create table booking
 (
     booking_id bigint generated always as identity primary key,
     user_id    bigint references "user" (user_id),
-    adults     int not null,
-    children   int not null,
-    confirmed  boolean,
+    adults     int         not null,
+    children   int         not null,
+    status     varchar(10) not null,
     booked_at  timestamp default now()
 );
 
-create table booking_connection
-(
-    booking_id    bigint references booking (booking_id),
-    connection_id bigint references ride_connection (connection_id),
-    primary key (booking_id, connection_id)
-);
+-- create table booking_connection
+-- (
+--     booking_id    bigint references booking (booking_id),
+--     connection_id bigint references ride_connection (connection_id),
+--     primary key (booking_id, connection_id)
+-- );

@@ -36,7 +36,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.stefandragomiroiu.rideshare_backend.config.security.Constants.JWT_ROLE_CLAIM;
+import static com.stefandragomiroiu.rideshare_backend.util.Constants.JWT_ROLE_CLAIM;
 
 @Configuration
 @EnableWebSecurity

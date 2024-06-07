@@ -1,6 +1,6 @@
 package com.stefandragomiroiu.rideshare_backend.service;
 
-import com.stefandragomiroiu.rideshare_backend.config.security.Constants;
+import com.stefandragomiroiu.rideshare_backend.util.Constants;
 import com.stefandragomiroiu.rideshare_backend.config.security.JwtManager;
 import com.stefandragomiroiu.rideshare_backend.controller.exception.EmailAlreadyUsedException;
 import com.stefandragomiroiu.rideshare_backend.controller.exception.InvalidCredentialsException;
@@ -21,10 +21,11 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Optional;
 
+import static com.stefandragomiroiu.rideshare_backend.util.Constants.USER_NOT_FOUND_ERROR_MESSAGE;
+
 @Service
 public class UserService {
 
-    public static final String USER_NOT_FOUND_ERROR_MESSAGE = "User with ID %d not found";
 
     private final UserRepository userRepository;
     private final UserTokenRepository userTokenRepository;

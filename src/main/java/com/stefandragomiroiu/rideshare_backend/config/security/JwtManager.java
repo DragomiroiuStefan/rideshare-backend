@@ -10,8 +10,8 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Date;
 
-import static com.stefandragomiroiu.rideshare_backend.config.security.Constants.JWT_EXPIRATION_TIME;
-import static com.stefandragomiroiu.rideshare_backend.config.security.Constants.JWT_ROLE_CLAIM;
+import static com.stefandragomiroiu.rideshare_backend.util.Constants.JWT_EXPIRATION_TIME;
+import static com.stefandragomiroiu.rideshare_backend.util.Constants.JWT_ROLE_CLAIM;
 
 @Component
 public class JwtManager {

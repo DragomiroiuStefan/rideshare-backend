@@ -13,7 +13,7 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(value = {IllegalArgumentException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public RestError handleIllegalArgumentException(RuntimeException e, HttpServletRequest request) {
+    public RestError handleIllegalArgumentException(IllegalArgumentException e, HttpServletRequest request) {
         return new RestError(
                 LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
