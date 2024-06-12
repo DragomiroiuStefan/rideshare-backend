@@ -7,15 +7,19 @@ import com.stefandragomiroiu.rideshare_backend.mapper.RideConnectionsMapper;
 import com.stefandragomiroiu.rideshare_backend.mapper.RideMapper;
 import com.stefandragomiroiu.rideshare_backend.model.Ride;
 import com.stefandragomiroiu.rideshare_backend.model.RideStatus;
+import com.stefandragomiroiu.rideshare_backend.model.projection.RideWithDepartureAndArrival;
 import com.stefandragomiroiu.rideshare_backend.repository.*;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.stefandragomiroiu.rideshare_backend.util.Constants.*;
 
+@Transactional
 @Service
 public class RideService {
 
@@ -23,21 +27,56 @@ public class RideService {
     private final RideConnectionsMapper rideConnectionsMapper;
     private final RideRepository rideRepository;
     private final RideConnectionsRepository rideConnectionsRepository;
+    private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final VehicleRepository vehicleRepository;
     private final LocationRepository locationRepository;
 
-    public RideService(RideMapper rideMapper, RideConnectionsMapper rideConnectionsMapper, RideRepository rideRepository, RideConnectionsRepository rideConnectionsRepository, UserRepository userRepository, VehicleRepository vehicleRepository, LocationRepository locationRepository) {
+    public RideService(RideMapper rideMapper, RideConnectionsMapper rideConnectionsMapper, RideRepository rideRepository, RideConnectionsRepository rideConnectionsRepository, BookingRepository bookingRepository, UserRepository userRepository, VehicleRepository vehicleRepository, LocationRepository locationRepository) {
         this.rideMapper = rideMapper;
         this.rideConnectionsMapper = rideConnectionsMapper;
         this.rideRepository = rideRepository;
         this.rideConnectionsRepository = rideConnectionsRepository;
+        this.bookingRepository = bookingRepository;
         this.userRepository = userRepository;
         this.vehicleRepository = vehicleRepository;
         this.locationRepository = locationRepository;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
+    public List<RideWithDepartureAndArrival> findBy(Long departureLocation, Long arrivalLocation, LocalDate date, Integer seats) {
+        if (locationRepository.findById(departureLocation).isEmpty()) {
+            throw new ResourceNotFoundException(String.format(LOCATION_NOT_FOUND_ERROR_MESSAGE, departureLocation));
+        }
+        if (locationRepository.findById(arrivalLocation).isEmpty()) {
+            throw new ResourceNotFoundException(String.format(LOCATION_NOT_FOUND_ERROR_MESSAGE, arrivalLocation));
+        }
+
+        // Get rides that go from departure to arrival
+        var rides = rideRepository.findRidesBy(departureLocation, arrivalLocation, date);
+
+        // Check if rides found have available seats on all connections
+        rides = rides.stream()
+                .filter(ride -> hasAvailableSeats(ride, seats))
+                .toList();
+
+        // Get driver information
+        // TODO
+
+        return rides;
+    }
+
+    /**
+     * Check if a ride has available seats. Bookings can be made on consecutive connections of a ride,
+     * so it is needed to check that all connections of a ride have available seats.
+     */
+    public boolean hasAvailableSeats(RideWithDepartureAndArrival ride, Integer seats) {
+        var connectionsWithBookedSeats = bookingRepository.findConnectionsWithBookedSeats(ride.rideId(), ride.departureTime(), ride.arrivalTime());
+
+        return connectionsWithBookedSeats.stream()
+                .anyMatch(c -> seats > ride.seats() - c.bookedSeats());  // Connection does not have available seats
+    }
+
     public Ride publish(RideDto rideDto) {
         if (userRepository.findById(rideDto.driver()).isEmpty()) {
             throw new ResourceNotFoundException(String.format(USER_NOT_FOUND_ERROR_MESSAGE, rideDto.driver()));
@@ -45,6 +84,7 @@ public class RideService {
         if (vehicleRepository.findById(rideDto.vehicle()).isEmpty()) {
             throw new ResourceNotFoundException(String.format(VEHICLE_NOT_FOUND_ERROR_MESSAGE, rideDto.vehicle()));
         }
+        // TODO check vehicle is owned by user
         for (RideConnectionDto connection : rideDto.connections()) {
             if (locationRepository.findById(connection.departureLocation()).isEmpty()) {
                 throw new ResourceNotFoundException(String.format(LOCATION_NOT_FOUND_ERROR_MESSAGE, connection.departureLocation()));
@@ -53,6 +93,8 @@ public class RideService {
                 throw new ResourceNotFoundException(String.format(LOCATION_NOT_FOUND_ERROR_MESSAGE, connection.arrivalLocation()));
             }
         }
+
+        // TODO validate ride date equals connections date or remove date from ride
 
         var ride = rideMapper.toEntity(rideDto);
         ride.setStatus(RideStatus.ACTIVE);

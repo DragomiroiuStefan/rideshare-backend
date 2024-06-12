@@ -1,10 +1,10 @@
-drop table if exists ride_rating;
 drop table if exists booking_connection;
+drop table if exists booking;
+drop table if exists ride_rating;
 drop table if exists ride_connection;
 drop table if exists location;
 drop table if exists ride;
 drop table if exists vehicle;
-drop table if exists booking;
 drop table if exists user_token;
 drop table if exists "user";
 
@@ -76,27 +76,30 @@ create table ride_connection
 
 create table ride_rating
 (
-    ride_id   bigint references ride (ride_id),
-    user_id   bigint references "user" (user_id),
-    rating    int not null,
-    comment   varchar(255),
-    posted_at timestamp default now(),
-    primary key (ride_id, user_id)
+    ride_rating_id bigint generated always as identity primary key,
+    ride_id        bigint references ride (ride_id),
+    user_id        bigint references "user" (user_id),
+    rating         int not null,
+    comment        varchar(255),
+    posted_at      timestamp default now()
 );
 
 create table booking
 (
-    booking_id bigint generated always as identity primary key,
-    user_id    bigint references "user" (user_id),
-    adults     int         not null,
-    children   int         not null,
-    status     varchar(10) not null,
-    booked_at  timestamp default now()
+    booking_id        bigint generated always as identity primary key,
+    user_id           bigint references "user" (user_id) not null,
+    ride_id           bigint references ride (ride_id)   not null,
+    adults            int                                not null,
+    children          int                                not null,
+    status            varchar(10)                        not null,
+    booked_at         timestamp default now(),
+    status_updated_at timestamp
 );
 
--- create table booking_connection
--- (
---     booking_id    bigint references booking (booking_id),
---     connection_id bigint references ride_connection (connection_id),
---     primary key (booking_id, connection_id)
--- );
+create table booking_connection
+(
+    booking_connection_id bigint generated always as identity primary key,
+    booking_id            bigint references booking (booking_id),
+    connection_id         bigint references ride_connection (connection_id),
+    unique (booking_id, connection_id)
+);

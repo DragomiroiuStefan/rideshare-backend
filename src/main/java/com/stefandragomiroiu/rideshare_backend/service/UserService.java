@@ -41,6 +41,7 @@ public class UserService {
 
     @Transactional
     public SignedInUser signUp(User user) {
+        // TODO move database access code to a transactional method
         if (userRepository.findByEmail(user.email()).isPresent()) {
             throw new EmailAlreadyUsedException();
         }

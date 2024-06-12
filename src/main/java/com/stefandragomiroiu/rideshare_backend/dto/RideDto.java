@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 
 public record RideDto(
@@ -21,6 +22,7 @@ public record RideDto(
         List<@Valid RideConnectionDto> connections
 ) {
     public RideDto {
+        // Check connections are linked
         for (int i = 0; i < connections.size() - 1; i++) {
             if (!connections.get(i).arrivalLocation().equals(connections.get(i + 1).departureLocation())) {
                 throw new IllegalArgumentException(
@@ -28,6 +30,13 @@ public record RideDto(
                 );
             }
         }
-        // TODO No cycle validation
+        // Check for cycle
+        var departures = new HashSet<>();
+        for (var connection : connections) {
+            departures.add(connection.departureLocation());
+            if (departures.contains(connection.arrivalLocation())) {
+                throw new IllegalArgumentException("Cannot publish a cyclic ride");
+            }
+        }
     }
 }
