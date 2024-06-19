@@ -48,10 +48,3 @@ Content-Type: application/json
 
 ### Delete
 DELETE {{host}}/rides/2
-
-### Sandbox
-POST {{host}}/sandbox
-Content-Type: application/json
-
-
-

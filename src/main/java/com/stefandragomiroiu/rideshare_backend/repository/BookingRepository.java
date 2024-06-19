@@ -1,13 +1,17 @@
 package com.stefandragomiroiu.rideshare_backend.repository;
 
 import com.stefandragomiroiu.rideshare_backend.model.Booking;
+import com.stefandragomiroiu.rideshare_backend.model.Ride;
+import com.stefandragomiroiu.rideshare_backend.model.User;
 import com.stefandragomiroiu.rideshare_backend.model.projection.ConnectionWithBookedSeats;
+import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BookingRepository extends ListCrudRepository<Booking, Long> {
@@ -23,4 +27,6 @@ public interface BookingRepository extends ListCrudRepository<Booking, Long> {
             group by rc.connection_id;
             """)
     List<ConnectionWithBookedSeats> findConnectionsWithBookedSeats(Long rideId, LocalDateTime departureTime, LocalDateTime arrivalTime);
+
+    Optional<Booking> findByUserIdAndRideIdAndStatus(Long userId, Long rideId, String status);
 }

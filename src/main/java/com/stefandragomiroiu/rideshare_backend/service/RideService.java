@@ -6,6 +6,7 @@ import com.stefandragomiroiu.rideshare_backend.dto.RideDto;
 import com.stefandragomiroiu.rideshare_backend.mapper.RideConnectionsMapper;
 import com.stefandragomiroiu.rideshare_backend.mapper.RideMapper;
 import com.stefandragomiroiu.rideshare_backend.model.Ride;
+import com.stefandragomiroiu.rideshare_backend.model.RideRating;
 import com.stefandragomiroiu.rideshare_backend.model.RideStatus;
 import com.stefandragomiroiu.rideshare_backend.model.projection.RideWithDepartureAndArrival;
 import com.stefandragomiroiu.rideshare_backend.repository.*;

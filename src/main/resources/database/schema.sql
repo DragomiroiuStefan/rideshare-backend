@@ -77,9 +77,20 @@ create table ride_connection
 create table ride_rating
 (
     ride_rating_id bigint generated always as identity primary key,
-    ride_id        bigint references ride (ride_id),
-    user_id        bigint references "user" (user_id),
-    rating         int not null,
+    ride_id        bigint references ride (ride_id)   not null,
+    user_id        bigint references "user" (user_id) not null,
+    rating         int                                not null,
+    comment        varchar(255),
+    posted_at      timestamp default now()
+);
+
+-- sa il pot folosi si la user si la driver
+create table user_review
+(
+    user_review_id bigint generated always as identity primary key,
+    user_id        bigint references "user" (user_id) not null,
+    --reviewed_by    bigint references "user" (user_id) not null,
+    rating         int                                not null,
     comment        varchar(255),
     posted_at      timestamp default now()
 );
