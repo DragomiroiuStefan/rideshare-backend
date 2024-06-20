@@ -3,18 +3,13 @@ package com.stefandragomiroiu.rideshare_backend.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
 
-import java.time.LocalDateTime;
-
 public class Booking {
     @Id
     private Long bookingId;
     private AggregateReference<User, Long> userId;
     private AggregateReference<Ride, Long> rideId;
-    private Integer adults;
-    private Integer children;
+    private Integer seats;
     private BookingStatus status;
-    private LocalDateTime bookedAt;
-    private LocalDateTime statusUpdatedAt;
 
     public Long getBookingId() {
         return bookingId;
@@ -40,20 +35,12 @@ public class Booking {
         this.rideId = rideId;
     }
 
-    public Integer getAdults() {
-        return adults;
+    public Integer getSeats() {
+        return seats;
     }
 
-    public void setAdults(Integer adults) {
-        this.adults = adults;
-    }
-
-    public Integer getChildren() {
-        return children;
-    }
-
-    public void setChildren(Integer children) {
-        this.children = children;
+    public void setSeats(Integer seats) {
+        this.seats = seats;
     }
 
     public BookingStatus getStatus() {
@@ -62,21 +49,5 @@ public class Booking {
 
     public void setStatus(BookingStatus status) {
         this.status = status;
-    }
-
-    public LocalDateTime getBookedAt() {
-        return bookedAt;
-    }
-
-    public void setBookedAt(LocalDateTime bookedAt) {
-        this.bookedAt = bookedAt;
-    }
-
-    public LocalDateTime getStatusUpdatedAt() {
-        return statusUpdatedAt;
-    }
-
-    public void setStatusUpdatedAt(LocalDateTime statusUpdatedAt) {
-        this.statusUpdatedAt = statusUpdatedAt;
     }
 }

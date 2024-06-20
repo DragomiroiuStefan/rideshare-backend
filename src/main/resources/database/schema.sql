@@ -97,14 +97,19 @@ create table user_review
 
 create table booking
 (
-    booking_id        bigint generated always as identity primary key,
-    user_id           bigint references "user" (user_id) not null,
-    ride_id           bigint references ride (ride_id)   not null,
-    adults            int                                not null,
-    children          int                                not null,
-    status            varchar(10)                        not null,
-    booked_at         timestamp default now(),
-    status_updated_at timestamp
+    booking_id bigint generated always as identity primary key,
+    user_id    bigint references "user" (user_id) not null,
+    ride_id    bigint references ride (ride_id)   not null,
+    seats      int                                not null,
+    status     varchar(10)                        not null
+);
+
+create table booking_status_history
+(
+    booking_status_history_id bigint generated always as identity primary key,
+    booking_id                bigint references booking (booking_id) not null,
+    status                    varchar(10)                            not null,
+    updated_at                timestamp default now()
 );
 
 create table booking_connection

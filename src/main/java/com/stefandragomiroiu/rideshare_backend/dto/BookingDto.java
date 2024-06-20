@@ -14,9 +14,7 @@ public record BookingDto(
         @NotNull
         Long arrivalLocation,
         @Positive
-        Integer adults,
-        @PositiveOrZero
-        Integer children
+        Integer seats
 ) {
     public BookingDto {
             if (departureLocation.equals(arrivalLocation)) {

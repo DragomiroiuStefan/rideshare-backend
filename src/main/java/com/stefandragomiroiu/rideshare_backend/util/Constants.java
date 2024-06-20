@@ -10,6 +10,7 @@ public class Constants {
     public static final String VEHICLE_NOT_FOUND_ERROR_MESSAGE = "Vehicle %s not found";
     public static final String LOCATION_NOT_FOUND_ERROR_MESSAGE = "Location %d not found";
     public static final String RIDE_NOT_FOUND_ERROR_MESSAGE = "Ride %d not found";
+    public static final String BOOKING_NOT_FOUND_ERROR_MESSAGE = "Booking %d not found";
 
     private Constants() {}
 

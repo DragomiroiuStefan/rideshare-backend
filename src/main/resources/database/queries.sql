@@ -12,7 +12,7 @@ WHERE rc_dep.departure_location = 4
   AND r.status = 'ACTIVE'
   AND r.departure_date = '2024-06-27';
 
-select rc.connection_id, rc.price, sum(b.adults + b.children) as booked_seats
+select rc.connection_id, rc.price, sum(b.seats) as booked_seats
 from ride_connection rc
          left join booking_connection bc on rc.connection_id = bc.connection_id
          left join booking b on b.booking_id = bc.booking_id and b.status = 'CONFIRMED'
@@ -39,7 +39,7 @@ WHERE r.ride_id = 23
   AND rc_arr.arrival_location = 6
   AND rc_dep.departure_time < rc_arr.arrival_time;
 
-select rc.connection_id, rc.price, sum(b.adults + b.children) as booked_seats
+select rc.connection_id, rc.price, sum(b.seats) as booked_seats
 from ride_connection rc
          left join booking_connection bc on rc.connection_id = bc.connection_id
          left join booking b on b.booking_id = bc.booking_id and b.status = 'CONFIRMED'

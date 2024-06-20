@@ -20,7 +20,22 @@ public class BookingController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Booking publish(@Valid @RequestBody BookingDto bookingDto) {
+    public Booking create(@Valid @RequestBody BookingDto bookingDto) {
         return bookingService.create(bookingDto);
+    }
+
+    @PostMapping("/{bookingId}/confirm")
+    public Booking confirm(@PathVariable Long bookingId) {
+        return bookingService.confirm(bookingId);
+    }
+
+    @PostMapping("/{bookingId}/decline")
+    public Booking decline(@PathVariable Long bookingId) {
+        return bookingService.decline(bookingId);
+    }
+
+    @PostMapping("/{bookingId}/cancel")
+    public Booking cancel(@PathVariable Long bookingId) {
+        return bookingService.cancel(bookingId);
     }
 }

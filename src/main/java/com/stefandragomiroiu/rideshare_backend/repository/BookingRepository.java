@@ -17,7 +17,7 @@ import java.util.Optional;
 public interface BookingRepository extends ListCrudRepository<Booking, Long> {
 
     @Query("""
-            select rc.connection_id, rc.price, sum(b.adults + b.children) as booked_seats
+            select rc.connection_id, rc.price, sum(b.seats) as booked_seats
             from ride_connection rc
                      left join booking_connection bc on rc.connection_id = bc.connection_id
                      left join booking b on b.booking_id = bc.booking_id and b.status = 'CONFIRMED'
@@ -27,6 +27,24 @@ public interface BookingRepository extends ListCrudRepository<Booking, Long> {
             group by rc.connection_id;
             """)
     List<ConnectionWithBookedSeats> findConnectionsWithBookedSeats(Long rideId, LocalDateTime departureTime, LocalDateTime arrivalTime);
+
+    @Query("""
+            select bc.connection_id
+            from booking b
+            inner join public.booking_connection bc on b.booking_id = bc.booking_id
+            where b.booking_id = :bookingId;
+            """)
+    List<Long> findConnectionsById(Long bookingId);
+
+    @Query("""
+            select rc.connection_id, rc.price, sum(b.seats) as booked_seats
+            from ride_connection rc
+                     left join booking_connection bc on rc.connection_id = bc.connection_id
+                     left join booking b on b.booking_id = bc.booking_id and b.status = 'CONFIRMED'
+            where rc.connection_id in (:connectionIds)
+            group by rc.connection_id;
+            """)
+    List<ConnectionWithBookedSeats> findConnectionsWithBookedSeats(List<Long> connectionIds);
 
     Optional<Booking> findByUserIdAndRideIdAndStatus(Long userId, Long rideId, String status);
 }
