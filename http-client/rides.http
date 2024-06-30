@@ -1,5 +1,5 @@
 ### Find rides
-GET {{host}}/rides/findBy?departureLocation=4&arrivalLocation=7&date=2024-06-27&seats=2
+GET {{host}}/rides?departureLocation=4&arrivalLocation=6&date=2024-08-27&seats=2
 Accept: application/json
 
 ### Find by id
@@ -11,8 +11,6 @@ POST {{host}}/rides/publish
 Content-Type: application/json
 
 {
-  "driver": 2,
-  "departureDate": "2024-06-28",
   "seats": 3,
   "additionalComment": "",
   "vehicle": "ABC-130",
@@ -20,22 +18,22 @@ Content-Type: application/json
     {
       "departureLocation": 4,
       "arrivalLocation": 5,
-      "departureTime": "2024-06-27T17:36:43.000000",
-      "arrivalTime": "2024-06-27T19:36:43.000000",
+      "departureTime": "2024-08-27T17:36:43.000000",
+      "arrivalTime": "2024-08-27T19:36:43.000000",
       "price": 50
     },
     {
       "departureLocation": 5,
       "arrivalLocation": 6,
-      "departureTime": "2024-06-27T19:36:43.000000",
-      "arrivalTime": "2024-06-27T20:36:43.000000",
+      "departureTime": "2024-08-27T19:36:43.000000",
+      "arrivalTime": "2024-08-27T20:36:43.000000",
       "price": 30
     },
     {
       "departureLocation": 6,
       "arrivalLocation": 7,
-      "departureTime": "2024-06-27T20:36:43.000000",
-      "arrivalTime": "2024-06-27T21:36:43.000000",
+      "departureTime": "2024-08-27T20:36:43.000000",
+      "arrivalTime": "2024-08-27T21:36:43.000000",
       "price": 40
     }
   ]

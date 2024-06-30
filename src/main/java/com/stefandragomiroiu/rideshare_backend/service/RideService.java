@@ -8,6 +8,7 @@ import com.stefandragomiroiu.rideshare_backend.mapper.RideMapper;
 import com.stefandragomiroiu.rideshare_backend.model.Ride;
 import com.stefandragomiroiu.rideshare_backend.model.RideRating;
 import com.stefandragomiroiu.rideshare_backend.model.RideStatus;
+import com.stefandragomiroiu.rideshare_backend.model.Vehicle;
 import com.stefandragomiroiu.rideshare_backend.model.projection.RideWithDepartureAndArrival;
 import com.stefandragomiroiu.rideshare_backend.repository.*;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
@@ -75,17 +76,20 @@ public class RideService {
         var connectionsWithBookedSeats = bookingRepository.findConnectionsWithBookedSeats(ride.rideId(), ride.departureTime(), ride.arrivalTime());
 
         return connectionsWithBookedSeats.stream()
-                .anyMatch(c -> seats > ride.seats() - c.bookedSeats());  // Connection does not have available seats
+                .anyMatch(c -> {
+                    var bookedSeats = c.bookedSeats() != null ? c.bookedSeats() : 0;
+                    return ride.seats() - bookedSeats >= seats;
+                });   // Connection does not have available seats
     }
 
     public Ride publish(RideDto rideDto) {
-        if (userRepository.findById(rideDto.driver()).isEmpty()) {
-            throw new ResourceNotFoundException(String.format(USER_NOT_FOUND_ERROR_MESSAGE, rideDto.driver()));
+        var driver = 2L; // TODO
+        var vehicle = vehicleRepository.findById(rideDto.vehicle()).orElseThrow(
+                () -> new ResourceNotFoundException(String.format(VEHICLE_NOT_FOUND_ERROR_MESSAGE, rideDto.vehicle()))
+        );
+        if (!vehicle.getOwner().equals(driver)) {
+            throw new IllegalArgumentException(String.format("Vehicle %s does not belong to user %d", vehicle.getPlateNumber(), driver));
         }
-        if (vehicleRepository.findById(rideDto.vehicle()).isEmpty()) {
-            throw new ResourceNotFoundException(String.format(VEHICLE_NOT_FOUND_ERROR_MESSAGE, rideDto.vehicle()));
-        }
-        // TODO check vehicle is owned by user
         for (RideConnectionDto connection : rideDto.connections()) {
             if (locationRepository.findById(connection.departureLocation()).isEmpty()) {
                 throw new ResourceNotFoundException(String.format(LOCATION_NOT_FOUND_ERROR_MESSAGE, connection.departureLocation()));
@@ -95,9 +99,9 @@ public class RideService {
             }
         }
 
-        // TODO validate ride date equals connections date or remove date from ride
-
         var ride = rideMapper.toEntity(rideDto);
+        ride.setDriver(driver);
+        ride.setDepartureDate(rideDto.connections().getFirst().departureTime().toLocalDate());
         ride.setStatus(RideStatus.ACTIVE);
         ride.setPostedAt(LocalDateTime.now());
         rideRepository.save(ride);

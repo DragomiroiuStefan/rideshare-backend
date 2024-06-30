@@ -3,9 +3,9 @@ POST {{host}}/auth/signUp
 Content-Type: application/json
 
 {
-  "email": "passenger@m.com",
-  "password": "passenger",
-  "firstName": "passenger",
+  "email": "admin@m.com",
+  "password": "admin",
+  "firstName": "admin",
   "lastName": "test",
   "phoneNumber": "07223",
   "birthDate": "2000-02-05"

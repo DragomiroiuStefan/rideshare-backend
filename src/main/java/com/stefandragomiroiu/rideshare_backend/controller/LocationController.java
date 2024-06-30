@@ -36,7 +36,7 @@ class LocationController {
 
     @GetMapping("/findByCityContaining")
     public List<Location> findByCityContaining(@RequestParam String city) {
-        return locationRepository.findByCityContaining(city);
+        return locationRepository.findByCityContainingIgnoreCase(city);
     }
 
     @GetMapping("/{locationId}")

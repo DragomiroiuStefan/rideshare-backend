@@ -16,7 +16,7 @@ Content-Type: application/json
   "color": "Red",
   "registrationYear":  2017,
   "seats": 4,
-  "owner": 1
+  "owner": 2
 }
 
 ### Update

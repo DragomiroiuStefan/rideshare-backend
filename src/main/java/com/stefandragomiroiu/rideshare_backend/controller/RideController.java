@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/rides")
 public class RideController {
@@ -21,7 +22,7 @@ public class RideController {
         this.rideService = rideService;
     }
 
-    @GetMapping("/findBy")
+    @GetMapping()
     public List<RideWithDepartureAndArrival> findBy(
             @RequestParam Long departureLocation,
             @RequestParam Long arrivalLocation,

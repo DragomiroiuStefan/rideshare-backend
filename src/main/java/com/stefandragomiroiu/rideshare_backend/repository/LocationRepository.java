@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface LocationRepository extends ListCrudRepository<Location, Long> {
-    List<Location> findByCityContaining(String city);
+    List<Location> findByCityContainingIgnoreCase(String city);
 }

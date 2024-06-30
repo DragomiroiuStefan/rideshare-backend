@@ -2,7 +2,7 @@
 GET {{host}}/locations
 
 ###  Find by City Containing
-GET {{host}}/locations/findByCityContaining?city=Ult
+GET {{host}}/locations/findByCityContaining?city=esti
 
 ### Find by id
 GET {{host}}/locations/2
